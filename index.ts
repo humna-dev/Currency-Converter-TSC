@@ -78,7 +78,7 @@ else if(operationAns.operation === "Fast Cash"){
                 }
             ]
         );
-    
+    git 
         myBalance -= fastCash.amount;
         console.log(chalk.green(`Your remaining balance is: ${myBalance}`));
     } else if(operationAns.operation === "Exit"){
