@@ -1,90 +1,48 @@
 #! /usr/bin/env node
 
 import inquirer from 'inquirer';
-import chalk from "chalk";
+import chalk from 'chalk';
 
-let myBalance = 50000; //Dollars
-let myPin = 6767;
+const currency: any = {
+    USD: 1, //BASE CURRENCY
+    EUR: 0.91,
+    GBP: 0.75,
+    INR: 74.57,
+    PKR: 280
+};
 
-console.log(chalk.yellowBright("Welcome to my ATM Machine!"));
+let user_answer = await inquirer.prompt([
+    {
+        name: "from",
+        type: "list",
+        choices: ['USD', 'EUR', 'GBP', 'INR', 'PKR'],
+        message: chalk.green("Enter From Currency"),
 
-let pinAnswer = await inquirer.prompt(
-    [
-        {
-            name: "pin",
-            message: chalk.red("Enter your Pin"),
-            type: "number"
-        }
-    ]
-);
-
-if(pinAnswer.pin === myPin){
-    console.log(chalk.bgBlueBright("Correct pin Code!!!"));
-
-    let operationAns = await inquirer.prompt(
-        [
-            {
-                name: "operation",
-                message: chalk.greenBright("Please Select Option"),
-                type: "list",
-                choices: ["Withdraw", "Check Balance", "Fast Cash", "Exit"]
-
-            }
-        ]
-    );
-
-    if(operationAns.operation === "Withdraw"){
-        let amountAns = await inquirer.prompt(
-            [
-                {
-                    name: "amount",
-                    message: chalk.cyan("Enter the amount to withdraw"),
-                    type: "number"
-                }
-            ]
-        );
+    },
 
 
 
 
+    
 
-
-
-
-        
-
-        if(amountAns.amount > myBalance){
-            console.log(chalk.red("Insufficient Balance!"));
-            
-        } else {
-            myBalance -= amountAns.amount;
-            console.log(chalk.green(`Your remaining balance is: ${myBalance}`));
-        }
-        
-        
+    {
+        name: "to",
+        type: "list",
+        choices: ['USD', 'EUR', 'GBP', 'INR', 'PKR'],
+        message: chalk.green("Enter To Currency")
+    },
+    {
+        name: "amount",
+        type: "number",
+        message: chalk.green("Enter Your Amount")
     }
- 
-else if(operationAns.operation === "Check Balance"){
-        console.log(chalk.green(`Your balance is: ${myBalance}`));
-}
-else if(operationAns.operation === "Fast Cash"){
-        let fastCash = await inquirer.prompt(
-            [
-                {
-                    name: "amount",
-                    message: chalk.cyan("Select an amount for Fast Cash "),
-                    type: "list",
-                    choices: [1000, 2000, 5000, 10000]
-                }
-            ]
-        );
-    git 
-        myBalance -= fastCash.amount;
-        console.log(chalk.green(`Your remaining balance is: ${myBalance}`));
-    } else if(operationAns.operation === "Exit"){
-        console.log(chalk.gray("Thank you for using my ATM Machine. Goodbye!"));
-        process.exit();
-    }
-} else {
-    console.log(chalk.red("Incorrect pin code!!"));
-}
+]);
+
+let userFromCurrency = user_answer.from
+let userToCurrency = user_answer.to
+let fromAmount = currency[userFromCurrency] //exchange rate
+let toAmount = currency[userToCurrency] //exchange rate
+let amount = user_answer.amount
+let baseAmount = amount / fromAmount //USD base currency  //4
+let convertedAmount = baseAmount * toAmount
+console.log(chalk.yellow(convertedAmount));
